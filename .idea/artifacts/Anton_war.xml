@@ -1,0 +1,14 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="Anton:war">
+    <output-path>$PROJECT_DIR$/target</output-path>
+    <properties id="maven-jee-properties">
+      <options>
+        <module>Anton</module>
+        <packaging>war</packaging>
+      </options>
+    </properties>
+    <root id="archive" name="Anton-1.0-SNAPSHOT.war">
+      <element id="artifact" artifact-name="Anton:war exploded" />
+    </root>
+  </artifact>
+</component>
