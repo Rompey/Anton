@@ -1,5 +1,7 @@
 package com.example.anton.homework_8;
 
+import com.example.anton.homework_8.config.DatabaseConfiguration;
+
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -11,10 +13,10 @@ public class DeleteServlet extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
-        EmployeeRepository employeeRepository = new EmployeeRepository();
-        String sid = request.getParameter("id");
-        int id = Integer.parseInt(sid);
-        employeeRepository.delete(id);
+        EmployeeRepository employeeRepository = new EmployeeRepository(new DatabaseConfiguration());
+        String sid = request.getParameter("uuid");
+        String uuid = String.valueOf(sid);
+        employeeRepository.delete(uuid);
         response.sendRedirect("viewServlet");
     }
 }

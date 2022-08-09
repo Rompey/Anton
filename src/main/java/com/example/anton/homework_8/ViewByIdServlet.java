@@ -1,5 +1,7 @@
 package com.example.anton.homework_8;
 
+import com.example.anton.homework_8.config.DatabaseConfiguration;
+
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -12,16 +14,16 @@ import java.io.PrintWriter;
 public class ViewByIdServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
-        EmployeeRepository employeeRepository = new EmployeeRepository();
+        EmployeeRepository employeeRepository = new EmployeeRepository(new DatabaseConfiguration());
         response.setContentType("text/html");
         PrintWriter out = response.getWriter();
 
-        String sid = request.getParameter("id");
-        int id = Integer.parseInt(sid);
+        String sid = request.getParameter("uuid");
+        String uuid = String.valueOf(sid);
 
-        User user = employeeRepository.getEmployeeById(id);
+        Customer customer = employeeRepository.getEmployeeById(uuid);
 
-        out.print(user);
+        out.print(customer);
         out.close();
     }
 }

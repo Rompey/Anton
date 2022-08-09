@@ -1,5 +1,7 @@
 package com.example.anton.homework_8;
 
+import com.example.anton.homework_8.config.DatabaseConfiguration;
+
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -16,11 +18,11 @@ public class ViewServlet extends HttpServlet {
         response.setContentType("text/html");
         PrintWriter out = response.getWriter();
 
-        EmployeeRepository employeeRepository = new EmployeeRepository();
-        List<User> list = employeeRepository.getAllEmployees();
+        EmployeeRepository employeeRepository = new EmployeeRepository(new DatabaseConfiguration());
+        List<Customer> list = employeeRepository.getAllEmployees();
 
-        for (User user : list) {
-            out.print(user);
+        for (Customer customer : list) {
+            out.print(customer);
         }
         out.close();
     }

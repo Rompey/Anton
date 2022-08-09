@@ -1,11 +1,16 @@
 package com.example.anton.homework_8;
 
+import com.example.anton.homework_8.config.DatabaseConfiguration;
+
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.math.BigDecimal;
+import java.sql.Timestamp;
+import java.util.Date;
 
 @WebServlet("/putServlet")
 public class PutServlet extends HttpServlet {
@@ -13,23 +18,23 @@ public class PutServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
-        EmployeeRepository employeeRepository = new EmployeeRepository();
+        EmployeeRepository employeeRepository = new EmployeeRepository(new DatabaseConfiguration());
         response.setContentType("text/html");
         PrintWriter out = response.getWriter();
 
         String sid = request.getParameter("id");
-        int id = Integer.parseInt(sid);
+        String uuid = String.valueOf(sid);
 
         String name = request.getParameter("name");
-        String email = request.getParameter("email");
+        double account = Double.parseDouble(request.getParameter("account"));
 
-        User user = new User();
-        user.setId(id);
-        user.setName(name);
-        user.setEmail(email);
-        user.setCountry(request.getParameter("country"));
+        Customer customer = new Customer();
+        customer.setUuid(uuid);
+        customer.setName(name);
+        customer.setBirthday(new Timestamp(new Date().getTime()));
+        customer.setAccount(new BigDecimal(account));
 
-        int status = employeeRepository.update(user);
+        int status = employeeRepository.update(customer);
 
         if (status > 0) {
             response.sendRedirect("viewServlet");

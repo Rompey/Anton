@@ -1,46 +1,33 @@
 package com.example.anton.homework_8;
 
+import com.example.anton.homework_8.config.DatabaseConfiguration;
 import lombok.extern.slf4j.Slf4j;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Slf4j
 public class EmployeeRepository {
 
-    private Connection getConnection() {
+    private final DatabaseConfiguration databaseConfiguration;
 
-        Connection connection = null;
-        String driver = "org.postgresql.Driver";
-        String url = "jdbc:postgresql://localhost:5432/employee";
-        String user = "postgres";
-        String password = "root";
-
-        try {
-            Class.forName(driver);
-            connection = DriverManager.getConnection(url, user, password);
-            if (connection != null) {
-                System.out.println("Connected to the Postgresql server successfully.");
-            } else {
-                System.out.println("Failed to make connection!");
-            }
-        } catch (SQLException sqlException) {
-            log.error(sqlException.getMessage());
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        }
-        return connection;
+    public EmployeeRepository(DatabaseConfiguration databaseConfiguration) {
+        this.databaseConfiguration = databaseConfiguration;
     }
 
-    public int save(User user) {
+
+    public int save(Customer customer) {
         int status = 0;
         try {
-            Connection connection = getConnection();
-            PreparedStatement ps = connection.prepareStatement("insert into users(name,email,country) values (?,?,?)");
-            ps.setString(1, user.getName());
-            ps.setString(2, user.getEmail());
-            ps.setString(3, user.getCountry());
+            Connection connection = databaseConfiguration.getConnection();
+            PreparedStatement ps =
+                    connection.prepareStatement("insert into customers(birthday,account, uuid, name) values (?,?,?,?)");
+            ps.setString(3, UUID.randomUUID().toString());
+            ps.setString(4, customer.getName());
+            ps.setTimestamp(1, customer.getBirthday());
+            ps.setBigDecimal(2, customer.getAccount());
 
             status = ps.executeUpdate();
             connection.close();
@@ -51,17 +38,18 @@ public class EmployeeRepository {
         return status;
     }
 
-    public int update(User user) {
+    public int update(Customer customer) {
 
         int status = 0;
 
         try {
-            Connection connection = getConnection();
-            PreparedStatement ps = connection.prepareStatement("update users set name=?,email=?,country=? where id=?");
-            ps.setString(1, user.getName());
-            ps.setString(2, user.getEmail());
-            ps.setString(3, user.getCountry());
-            ps.setInt(4, user.getId());
+            Connection connection = databaseConfiguration.getConnection();
+            PreparedStatement ps =
+                    connection.prepareStatement("update customers set name=?,birthday=?,account=? where uuid=?");
+            ps.setString(3, customer.getName());
+            ps.setTimestamp(1, customer.getBirthday());
+            ps.setBigDecimal(2, customer.getAccount());
+            ps.setString(4, UUID.randomUUID().toString());
 
             status = ps.executeUpdate();
             connection.close();
@@ -72,14 +60,14 @@ public class EmployeeRepository {
         return status;
     }
 
-    public int delete(int id) {
+    public int delete(String uuid) {
 
         int status = 0;
 
         try {
-            Connection connection = getConnection();
-            PreparedStatement ps = connection.prepareStatement("delete from users where id=?");
-            ps.setInt(1, id);
+            Connection connection = databaseConfiguration.getConnection();
+            PreparedStatement ps = connection.prepareStatement("delete from customers where uuid=?");
+            ps.setString(1, UUID.randomUUID().toString());
             status = ps.executeUpdate();
 
             connection.close();
@@ -90,54 +78,54 @@ public class EmployeeRepository {
         return status;
     }
 
-    public User getEmployeeById(int id) {
+    public Customer getEmployeeById(String uuid) {
 
-        User user = new User();
+        Customer customer = new Customer();
 
         try {
-            Connection connection = getConnection();
-            PreparedStatement ps = connection.prepareStatement("select * from users where id=?");
-            ps.setInt(1, id);
+            Connection connection = databaseConfiguration.getConnection();
+            PreparedStatement ps = connection.prepareStatement("select * from customers where uuid=?");
+            ps.setString(1, UUID.randomUUID().toString());
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
-                user.setId(rs.getInt(1));
-                user.setName(rs.getString(2));
-                user.setEmail(rs.getString(3));
-                user.setCountry(rs.getString(4));
+                customer.setUuid(rs.getString(3));
+                customer.setName(rs.getString(4));
+                customer.setBirthday(rs.getTimestamp(1));
+                customer.setAccount(rs.getBigDecimal(2));
             }
             connection.close();
 
         } catch (SQLException exception) {
             exception.printStackTrace();
         }
-        return user;
+        return customer;
     }
 
-    public List<User> getAllEmployees() {
+    public List<Customer> getAllEmployees() {
 
-        List<User> listUsers = new ArrayList<>();
+        List<Customer> customerList = new ArrayList<>();
 
         try {
-            Connection connection = getConnection();
-            PreparedStatement ps = connection.prepareStatement("select * from users");
+            Connection connection = databaseConfiguration.getConnection();
+            PreparedStatement ps = connection.prepareStatement("select * from customer");
             ResultSet rs = ps.executeQuery();
 
             while (rs.next()) {
 
-                User user = new User();
+                Customer customer = new Customer();
 
-                user.setId(rs.getInt(1));
-                user.setName(rs.getString(2));
-                user.setEmail(rs.getString(3));
-                user.setCountry(rs.getString(4));
+                customer.setUuid(rs.getString(3));
+                customer.setName(rs.getString(4));
+                customer.setBirthday(rs.getTimestamp(1));
+                customer.setAccount(rs.getBigDecimal(2));
 
-                listUsers.add(user);
+                customerList.add(customer);
             }
             connection.close();
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return listUsers;
+        return customerList;
     }
 }
