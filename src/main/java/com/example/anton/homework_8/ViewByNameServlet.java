@@ -1,7 +1,6 @@
-package com.example.anton.homework_8.config;
+package com.example.anton.homework_8;
 
-import com.example.anton.homework_8.Customer;
-import com.example.anton.homework_8.CustomerRepository;
+import com.example.anton.homework_8.config.DatabaseConfiguration;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
