@@ -9,11 +9,11 @@ import java.util.List;
 import java.util.UUID;
 
 @Slf4j
-public class EmployeeRepository {
+public class CustomerRepository {
 
     private final DatabaseConfiguration databaseConfiguration;
 
-    public EmployeeRepository(DatabaseConfiguration databaseConfiguration) {
+    public CustomerRepository(DatabaseConfiguration databaseConfiguration) {
         this.databaseConfiguration = databaseConfiguration;
     }
 
@@ -78,7 +78,27 @@ public class EmployeeRepository {
         return status;
     }
 
-    public Customer getEmployeeById(String uuid) {
+    public Customer getCustomerByName(String name){
+        Customer customer = new Customer();
+
+        try {
+            Connection connection = databaseConfiguration.getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM customers where name=?");
+            preparedStatement.setString(1, name);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if(resultSet.next()){
+                customer.setUuid(resultSet.getString(3));
+                customer.setName(resultSet.getString(4));
+                customer.setBirthday(resultSet.getTimestamp(1));
+                customer.setAccount(resultSet.getBigDecimal(2));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return customer;
+    }
+
+    public Customer getCustomerById(String uuid) {
 
         Customer customer = new Customer();
 
@@ -101,7 +121,7 @@ public class EmployeeRepository {
         return customer;
     }
 
-    public List<Customer> getAllEmployees() {
+    public List<Customer> getAllCustomers() {
 
         List<Customer> customerList = new ArrayList<>();
 

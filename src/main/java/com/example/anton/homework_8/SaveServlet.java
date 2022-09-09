@@ -18,7 +18,7 @@ public class SaveServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
-        EmployeeRepository employeeRepository = new EmployeeRepository(new DatabaseConfiguration());
+        CustomerRepository customerRepository = new CustomerRepository(new DatabaseConfiguration());
         response.setContentType("text/plain");
         response.setCharacterEncoding("UTF-8");
 
@@ -33,7 +33,7 @@ public class SaveServlet extends HttpServlet {
         customer.setAccount(new BigDecimal(account));
         customer.setBirthday(new Timestamp(new Date().getTime()));
 
-        int status = employeeRepository.save(customer);
+        int status = customerRepository.save(customer);
 
         if (status > 0) {
             out.print("Record saved successfully!");

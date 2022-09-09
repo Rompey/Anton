@@ -18,8 +18,8 @@ public class ViewServlet extends HttpServlet {
         response.setContentType("text/html");
         PrintWriter out = response.getWriter();
 
-        EmployeeRepository employeeRepository = new EmployeeRepository(new DatabaseConfiguration());
-        List<Customer> list = employeeRepository.getAllEmployees();
+        CustomerRepository customerRepository = new CustomerRepository(new DatabaseConfiguration());
+        List<Customer> list = customerRepository.getAllCustomers();
 
         for (Customer customer : list) {
             out.print(customer);

@@ -18,7 +18,7 @@ public class PutServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
-        EmployeeRepository employeeRepository = new EmployeeRepository(new DatabaseConfiguration());
+        CustomerRepository customerRepository = new CustomerRepository(new DatabaseConfiguration());
         response.setContentType("text/html");
         PrintWriter out = response.getWriter();
 
@@ -34,7 +34,7 @@ public class PutServlet extends HttpServlet {
         customer.setBirthday(new Timestamp(new Date().getTime()));
         customer.setAccount(new BigDecimal(account));
 
-        int status = employeeRepository.update(customer);
+        int status = customerRepository.update(customer);
 
         if (status > 0) {
             response.sendRedirect("viewServlet");

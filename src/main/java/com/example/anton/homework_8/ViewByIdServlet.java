@@ -14,14 +14,14 @@ import java.io.PrintWriter;
 public class ViewByIdServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
-        EmployeeRepository employeeRepository = new EmployeeRepository(new DatabaseConfiguration());
+        CustomerRepository customerRepository = new CustomerRepository(new DatabaseConfiguration());
         response.setContentType("text/html");
         PrintWriter out = response.getWriter();
 
         String sid = request.getParameter("uuid");
         String uuid = String.valueOf(sid);
 
-        Customer customer = employeeRepository.getEmployeeById(uuid);
+        Customer customer = customerRepository.getCustomerById(uuid);
 
         out.print(customer);
         out.close();
